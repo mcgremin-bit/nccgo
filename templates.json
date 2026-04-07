@@ -1,0 +1,107 @@
+{
+  "versione_catalogo": "1.0.0",
+  "ultimo_aggiornamento": "2026-04-06",
+
+  "gestionali": [
+    {
+      "id": "nccgest",
+      "nome": "NCCGEST",
+      "versione_template": "1.0.0",
+      "descrizione": "Gestionale NCCGEST - formato email con tabella DATI SERVIZIO",
+
+      "riconoscimento": {
+        "parole_chiave_obbligatorie": ["DATI SERVIZIO", "ID Servizio"],
+        "parole_chiave_cancellazione": ["CANCELLAZIONE SERVIZIO", "stato CANCELLATO"]
+      },
+
+      "formato_email": "html_tabella",
+
+      "campi": {
+        "id_servizio": {
+          "regex": "ID\\s+Servizio[|\\s]+(\\d+)",
+          "obbligatorio": true
+        },
+        "data_ora": {
+          "regex": "Data\\s+inizio[|\\s]+(\\d{2}/\\d{2}/\\d{4})\\s+(\\d{2}:\\d{2})",
+          "gruppo_data": 1,
+          "gruppo_ora": 2,
+          "formato_data": "DD/MM/YYYY",
+          "obbligatorio": true
+        },
+        "cliente": {
+          "regex": "Cliente[|\\s]+(.*?)(?=\\n|Servizio/Mezzo)",
+          "obbligatorio": false
+        },
+        "partenza": {
+          "regex": "Partenza[|\\s]+(.*?)(?=\\n|Destinazione)",
+          "obbligatorio": true
+        },
+        "destinazione": {
+          "regex": "Destinazione[|\\s]+(.*?)(?=\\n|Volo)",
+          "obbligatorio": false
+        },
+        "volo_treno": {
+          "regex": "Volo/Treno[^|]*[|\\s]+(.*?)(?=\\n|Passeggeri)",
+          "obbligatorio": false
+        },
+        "passeggeri": {
+          "regex": "Passeggeri[|\\s]+(.*?)(?=\\n|Note)",
+          "obbligatorio": false,
+          "post_elaborazione": "estrai_nome_e_telefono"
+        },
+        "note": {
+          "regex": "Note[|\\s]+(.*?)(?=\\n|Mezzo|Pagamento)",
+          "obbligatorio": false
+        },
+        "mezzo": {
+          "regex": "Mezzo[|\\s]+([A-Z]{2}\\d+[A-Z]{2})",
+          "obbligatorio": false
+        }
+      },
+
+      "cancellazione": {
+        "regex_id": "CANCELLAZIONE\\s+SERVIZIO\\s+ID[:\\s]+(\\d+)",
+        "regex_data_ora": "del\\s+(\\d{2}/\\d{2}/\\d{4})\\s+alle\\s+ore\\s+(\\d{2}:\\d{2})"
+      }
+    },
+
+    {
+      "id": "uber",
+      "nome": "Uber Italia",
+      "versione_template": "1.0.0",
+      "descrizione": "Email di conferma prenotazione Uber",
+
+      "riconoscimento": {
+        "parole_chiave_obbligatorie": ["conferma la prenotazione", "corsa per"],
+        "parole_chiave_cancellazione": []
+      },
+
+      "formato_email": "testo",
+
+      "campi": {
+        "data_ora_partenza": {
+          "regex": "corsa per\\s+([^,]+?)\\s+alle ore\\s+(\\d{1,2}[:.:]\\d{2})",
+          "gruppo_data": 1,
+          "gruppo_ora": 2,
+          "formato_data": "TESTUALE_ITALIANO",
+          "obbligatorio": true
+        },
+        "partenza": {
+          "regex": "con partenza da\\s+([^.\\n]+)",
+          "obbligatorio": true
+        },
+        "cliente": {
+          "regex": "Grazie,?\\s*\\n\\s*([A-Za-z]+)",
+          "obbligatorio": false
+        }
+      },
+
+      "valori_fissi": {
+        "note": "Uber",
+        "destinazione": ""
+      },
+
+      "cancellazione": null
+    }
+  ]
+}
